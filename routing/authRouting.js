@@ -5,9 +5,16 @@ module.exports = (app) => {
         scope: ['profile', 'email']
     }));
 
-    app.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/login'}, () => {
+    app.get('/auth/google/callback', passport.authenticate('google'), (req, res, next) => {
+        res.redirect('/');
+    });
 
-        }), (req, res, next) => {
+    app.get('/auth/logout', (req, res, next) => {
+        req.logout();
+        res.redirect('/');
+    });
 
-        });
+    app.get('/api/current_user', (req, res, next) => {
+        res.send(req.user);
+    });
 };

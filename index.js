@@ -4,8 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const port = process.env.PORT || 3000;
 
-require('./models/User');
-
+mongoose.set('useFindAndModify', false);
 mongoose.connect(process.env.mongoURI, {useNewUrlParser: true})
     .then(() => console.log("Connect to database"),
         (err) => console.log("Unable connect to database", err));
@@ -22,5 +21,5 @@ require('./routing/authRouting')(app);
 
 
 http.createServer(app).listen(port, () => {
-    console.log("Server started");
+    console.log("Server started on port " + port);
 });
