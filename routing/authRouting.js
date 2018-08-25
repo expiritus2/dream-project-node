@@ -1,4 +1,5 @@
 const passport = require('passport');
+const checkAuth = require('../middleware/check-auth');
 
 module.exports = (app) => {
     app.get('/auth/google', passport.authenticate('google', {
@@ -14,7 +15,7 @@ module.exports = (app) => {
         res.redirect('/');
     });
 
-    app.get('/api/current_user', (req, res, next) => {
+    app.get('/api/current_user', checkAuth, (req, res, next) => {
         res.send(req.user);
     });
 };
