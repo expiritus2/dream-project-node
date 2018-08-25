@@ -17,7 +17,14 @@ module.exports = (app) => {
         if (existingUser) {
             done(null, existingUser);
         } else {
-            const user = await new User({googleId: profile.id}).save();
+            const user = await new User({
+                googleId: profile.id,
+                userInfo: {
+                    firstName: profile.name.familyName,
+                    secondName: profile.name.givenName,
+                    emails: profile.emails
+                }
+            }).save();
             done(null, user);
         }
     }));
@@ -37,7 +44,6 @@ module.exports = (app) => {
         const user = await User.findById(id);
         done(null, user);
     });
-
 
     app.use(passport.initialize());
     app.use(passport.session());
