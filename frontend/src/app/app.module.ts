@@ -6,19 +6,26 @@ import {HomeComponent} from './home/home.component';
 import {PersonalAreaComponent} from './personal-area/personal-area.component';
 import {AdminComponent} from './admin/admin.component';
 import {AppRoutingModule} from "./app-routing.module";
+import {HeaderComponent} from './layout/header/header.component';
+import {FooterComponent} from './layout/footer/footer.component';
+import {AuthService} from "./services/auth.service";
+import {HttpModule} from "@angular/http";
 
 @NgModule({
     declarations: [
         AppComponent,
         HomeComponent,
         PersonalAreaComponent,
-        AdminComponent
+        AdminComponent,
+        HeaderComponent,
+        FooterComponent
     ],
     imports: [
         BrowserModule,
-        AppRoutingModule
+        AppRoutingModule,
+        HttpModule
     ],
-    providers: [],
+    providers: [AuthService],
     bootstrap: [AppComponent]
 })
 export class AppModule {

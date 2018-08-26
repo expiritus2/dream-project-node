@@ -20,8 +20,8 @@ module.exports = (app) => {
             const user = await new User({
                 googleId: profile.id,
                 userInfo: {
-                    firstName: profile.name.familyName,
-                    secondName: profile.name.givenName,
+                    firstName: profile.name.givenName,
+                    lastName: profile.name.familyName,
                     emails: profile.emails
                 }
             }).save();

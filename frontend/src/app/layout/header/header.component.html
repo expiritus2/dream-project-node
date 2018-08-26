@@ -1,0 +1,12 @@
+<header class="header">
+  <nav class="navigation">
+    <a routerLink="/">Home</a>
+  </nav>
+  <div class="nav-info" *ngIf="isAuthenticated">
+      <a routerLink="/personal-area">Personal Area</a>
+      <a href="/auth/logout">Logout</a>
+  </div>
+    <div class="nav-info" *ngIf="!isAuthenticated">
+        <a href="/auth/google">Sign Up With Google</a>
+    </div>
+</header>
