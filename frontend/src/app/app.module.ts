@@ -10,6 +10,9 @@ import {HeaderComponent} from './layout/header/header.component';
 import {FooterComponent} from './layout/footer/footer.component';
 import {AuthService} from "./services/auth.service";
 import {HttpModule} from "@angular/http";
+import {AuthGuard} from "./services/auth-guard.service";
+import { AuthorisedComponent } from './helpers/authorised/authorised.component';
+import { LogoutComponent } from './helpers/logout/logout.component';
 
 @NgModule({
     declarations: [
@@ -18,14 +21,16 @@ import {HttpModule} from "@angular/http";
         PersonalAreaComponent,
         AdminComponent,
         HeaderComponent,
-        FooterComponent
+        FooterComponent,
+        AuthorisedComponent,
+        LogoutComponent
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         HttpModule
     ],
-    providers: [AuthService],
+    providers: [AuthService, AuthGuard],
     bootstrap: [AppComponent]
 })
 export class AppModule {

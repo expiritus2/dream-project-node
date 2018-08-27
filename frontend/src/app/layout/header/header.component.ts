@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
-import {User} from "../../models/user.mode";
+import {AuthGuard} from "../../services/auth-guard.service";
 import {Subscription} from "rxjs";
 
 @Component({
@@ -9,23 +9,56 @@ import {Subscription} from "rxjs";
     styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-    user: User;
-    isAuthenticated: boolean;
-    currentUser = new Subscription();
+    isAuthenticated: boolean = false;
+    isShow = false;
+    currentUser: Subscription;
+    unauthorised: Subscription;
 
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService,
+                private authGuard: AuthGuard) {
     }
 
     ngOnInit() {
-        this.authService.auth();
-        this.isAuthenticated = this.authService.isAuthenticated();
-        this.currentUser = this.authService.currentUser.subscribe(user => {
-            this.user = user;
-            this.isAuthenticated = this.authService.isAuthenticated();
-        });
+        this.defineAuthGreet();
     }
 
-    ngOnDestroy() {
-        this.currentUser.unsubscribe();
+    defineAuthGreet() {
+        this.isAuthenticated = this.authService.isAuthenticated();
+        const authorised = JSON.parse(localStorage.getItem("authorised"));
+        if (!this.authService.user && authorised) {
+            this.authService.auth();
+            this.currentUser = this.authService.getCurrentUserObservable()
+                .subscribe(
+                    user => {
+                        this.isShow = true;
+                        this.isAuthenticated = this.authService.isAuthenticated();
+                        localStorage.setItem("auth", JSON.stringify(true));
+                    }, err => {
+                        this.isAuthenticated = this.authService.isAuthenticated();
+                        this.isShow = true;
+                    }
+                );
+            this.unauthorised = this.authService.getUnauthorisedObservable()
+                .subscribe(
+                    response => {
+                        if(response.status === 401) {
+                            this.isShow = true;
+                        }
+                    }
+                )
+        } else {
+            this.isShow = true;
+        }
+    }
+
+    ngOnDestroy(){
+        if(this.currentUser){
+            this.currentUser.unsubscribe();
+        }
+
+        if(this.unauthorised) {
+            this.unauthorised.unsubscribe();
+        }
+
     }
 }

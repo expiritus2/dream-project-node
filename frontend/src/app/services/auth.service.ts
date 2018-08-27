@@ -5,29 +5,36 @@ import {Subject} from "rxjs";
 
 @Injectable()
 export class AuthService {
-    private _user: User;
-    currentUser = new Subject<User>();
+    public user: User;
+    public currentUser = new Subject<User>();
+    public unauthorized = new Subject<{status: number}>();
 
     constructor(private http: Http) {
     }
 
     auth() {
-        if (!this._user) {
-            this.http.get('/api/current_user')
-                .subscribe(
-                    (response) => {
-                        const json = response.json();
-                        const email = json.userInfo.emails[0].value;
-                        const role = json.role;
-                        const fullName = `${json.userInfo.firstName} ${json.userInfo.lastName}`;
+        return this.http.get('/api/current_user').subscribe(
+            (response) => {
+                const json = response.json();
+                const email = json.userInfo.emails[0].value;
+                const role = json.role;
+                const fullName = `${json.userInfo.firstName} ${json.userInfo.lastName}`;
+                this.user = new User(email, role, fullName);
+                this.currentUser.next(this.user);
+            }, err => {
+                this.unauthorized.next({status: err.status});
+            });
+    }
 
-                        this._user = new User(email, role, fullName);
-                        this.currentUser.next(this._user);
-                    });
-        }
+    getCurrentUserObservable(){
+        return this.currentUser.asObservable();
+    }
+
+    getUnauthorisedObservable() {
+        return this.unauthorized.asObservable();
     }
 
     isAuthenticated() {
-        return !!this._user;
+        return !!this.user;
     }
 }
