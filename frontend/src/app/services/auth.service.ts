@@ -13,7 +13,7 @@ export class AuthService {
     }
 
     auth() {
-        return this.http.get('/api/current_user').subscribe(
+        return this.http.get('/auth/current_user').subscribe(
             (response) => {
                 const json = response.json();
                 const email = json.userInfo.emails[0].value;
@@ -24,6 +24,10 @@ export class AuthService {
             }, err => {
                 this.unauthorized.next({status: err.status});
             });
+    }
+
+    getCurrentUser(){
+        return this.user;
     }
 
     getCurrentUserObservable(){

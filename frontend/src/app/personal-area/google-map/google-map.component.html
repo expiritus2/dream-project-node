@@ -1,0 +1,38 @@
+<agm-map
+        [latitude]="lat"
+        [longitude]="lng"
+        [zoom]="zoom"
+        [disableDefaultUI]="false"
+        [zoomControl]="false"
+        [fullscreenControl]="true"
+        (mapClick)="onMapClicked($event)">
+    <agm-marker [latitude]="lat"
+                [longitude]="lng"
+                [markerDraggable]=""
+                (markerClick)="onClickMarker()"
+                (mouseOver)="onHoverMarker($event)"
+                (mouseOut)="onMouseOut($event)"
+                (dragEnd)="onMarkerDragEnd()">
+        <agm-info-window>
+            <p><strong>Marker name</strong></p>
+            <p>
+                <span>
+                  <img [src]="" style="max-width: 50px;">
+                </span>
+            </p>
+            <a class="deleteMarker">Delete</a>
+        </agm-info-window>
+    </agm-marker>
+    <agm-circle-custom
+                (radiusChange)="onRadiusChange($event)"
+                (centerChange)="onCenterChange($event)"
+                (dragStart)="onDragStart($event)"
+                (dragEnd)="onDragEnd($event)"
+                [strokeWeight]="0"
+                [latitude]="lat" [longitude]="lng"
+                [radius]="500"
+                [fillColor]="'red'"
+                [circleDraggable]="true"
+                [editable]="true">
+    </agm-circle-custom>
+</agm-map>

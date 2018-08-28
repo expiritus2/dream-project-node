@@ -3,6 +3,7 @@
     <a routerLink="/">Home</a>
   </nav>
   <div class="nav-info" *ngIf="isShow">
+      <span *ngIf="isAuthenticated">Hello {{currentUser?.fullName}}, {{currentUser?.role}} </span>
       <a routerLink="/personal-area" *ngIf="isAuthenticated">Personal Area</a>
       <a href="/auth/logout" *ngIf="isAuthenticated">Logout</a>
       <a href="/auth/google" *ngIf="!isAuthenticated">Sign Up With Google</a>

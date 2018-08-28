@@ -11,8 +11,11 @@ import {FooterComponent} from './layout/footer/footer.component';
 import {AuthService} from "./services/auth.service";
 import {HttpModule} from "@angular/http";
 import {AuthGuard} from "./services/auth-guard.service";
-import { AuthorisedComponent } from './helpers/authorised/authorised.component';
-import { LogoutComponent } from './helpers/logout/logout.component';
+import {AuthorisedComponent} from './helpers/authorised/authorised.component';
+import {LogoutComponent} from './helpers/logout/logout.component';
+import {AgmCoreModule, CircleManager, GoogleMapsAPIWrapper} from '@agm/core';
+import {GoogleMapComponent} from './personal-area/google-map/google-map.component';
+import {AgmCircle} from "./personal-area/google-map/directives/agm-circle.directive";
 
 @NgModule({
     declarations: [
@@ -23,12 +26,17 @@ import { LogoutComponent } from './helpers/logout/logout.component';
         HeaderComponent,
         FooterComponent,
         AuthorisedComponent,
-        LogoutComponent
+        LogoutComponent,
+        GoogleMapComponent,
+        AgmCircle
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
-        HttpModule
+        HttpModule,
+        AgmCoreModule.forRoot({
+            apiKey: 'AIzaSyDZQ0NlqUu8LdwdDWwOxOYuHaBtDEkGJfo'
+        })
     ],
     providers: [AuthService, AuthGuard],
     bootstrap: [AppComponent]

@@ -12,6 +12,6 @@ export class AuthorisedComponent implements OnInit {
 
   ngOnInit() {
       localStorage.setItem("authorised", JSON.stringify(true));
-      this.router.navigate(['/']);
+      this.router.navigate(['/personal-area']);
   }
 }

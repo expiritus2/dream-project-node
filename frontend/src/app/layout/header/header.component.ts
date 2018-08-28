@@ -2,6 +2,7 @@ import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/c
 import {AuthService} from "../../services/auth.service";
 import {AuthGuard} from "../../services/auth-guard.service";
 import {Subscription} from "rxjs";
+import {User} from "../../models/user.mode";
 
 @Component({
     selector: 'app-header',
@@ -11,8 +12,9 @@ import {Subscription} from "rxjs";
 export class HeaderComponent implements OnInit, OnDestroy {
     isAuthenticated: boolean = false;
     isShow = false;
-    currentUser: Subscription;
-    unauthorised: Subscription;
+    currentUser: User;
+    currentUserSubscription: Subscription;
+    unauthorisedSubscription: Subscription;
 
     constructor(private authService: AuthService,
                 private authGuard: AuthGuard) {
@@ -24,21 +26,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     defineAuthGreet() {
         this.isAuthenticated = this.authService.isAuthenticated();
+        this.currentUser = this.authService.getCurrentUser();
         const authorised = JSON.parse(localStorage.getItem("authorised"));
         if (!this.authService.user && authorised) {
             this.authService.auth();
-            this.currentUser = this.authService.getCurrentUserObservable()
+            this.currentUserSubscription = this.authService.getCurrentUserObservable()
                 .subscribe(
                     user => {
                         this.isShow = true;
                         this.isAuthenticated = this.authService.isAuthenticated();
+                        this.currentUser = user;
                         localStorage.setItem("auth", JSON.stringify(true));
                     }, err => {
                         this.isAuthenticated = this.authService.isAuthenticated();
                         this.isShow = true;
                     }
                 );
-            this.unauthorised = this.authService.getUnauthorisedObservable()
+            this.unauthorisedSubscription = this.authService.getUnauthorisedObservable()
                 .subscribe(
                     response => {
                         if(response.status === 401) {
@@ -52,12 +56,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(){
-        if(this.currentUser){
-            this.currentUser.unsubscribe();
+        if(this.currentUserSubscription){
+            this.currentUserSubscription.unsubscribe();
         }
 
-        if(this.unauthorised) {
-            this.unauthorised.unsubscribe();
+        if(this.unauthorisedSubscription) {
+            this.unauthorisedSubscription.unsubscribe();
         }
 
     }

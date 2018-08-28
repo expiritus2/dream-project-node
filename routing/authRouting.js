@@ -15,7 +15,7 @@ module.exports = (app) => {
         res.redirect('/logout');
     });
 
-    app.get('/api/current_user', checkAuth, (req, res, next) => {
+    app.get('/auth/current_user', checkAuth, (req, res, next) => {
         res.send(req.user);
     });
 };
