@@ -6,13 +6,13 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChange,
-    SimpleChanges,
+    SimpleChange
 } from "@angular/core";
 import {MouseEvent} from '@agm/core/map-types';
 import {MouseEvent as MapMouseEvent} from '@agm/core/services/google-maps-types';
 import {CircleManager, LatLngBounds, LatLngLiteral, LatLng} from "@agm/core";
 import {Subscription} from "rxjs";
+import {MapService} from "../service/map.service";
 
 @Directive({
     selector: 'agm-circle-custom'
@@ -165,13 +165,19 @@ export class AgmCircle implements OnInit, OnChanges, OnDestroy {
 
     private _eventSubscriptions: Subscription[] = [];
 
-    constructor(private _manager: CircleManager) {}
+    constructor(private _manager: CircleManager,
+                private mapService: MapService) {}
 
     /** @internal */
     ngOnInit() {
+        // @ts-ignore
         this._manager.addCircle(this);
         this._circleAddedToManager = true;
         this._registerEventListeners();
+
+        this.getBounds().then(bounds => {
+          this.mapService.circleBounds.next(bounds);
+        });
     }
 
     /** @internal */
@@ -180,18 +186,23 @@ export class AgmCircle implements OnInit, OnChanges, OnDestroy {
             return;
         }
         if (changes['latitude'] || changes['longitude']) {
+            // @ts-ignore
             this._manager.setCenter(this);
         }
         if (changes['editable']) {
+            // @ts-ignore
             this._manager.setEditable(this);
         }
         if (changes['draggable']) {
+            // @ts-ignore
             this._manager.setDraggable(this);
         }
         if (changes['visible']) {
+            // @ts-ignore
             this._manager.setVisible(this);
         }
         if (changes['radius']) {
+            // @ts-ignore
             this._manager.setRadius(this);
         }
         this._updateCircleOptionsChanges(changes);
@@ -203,6 +214,7 @@ export class AgmCircle implements OnInit, OnChanges, OnDestroy {
             Object.keys(changes).filter(k => AgmCircle._mapOptions.indexOf(k) !== -1);
         optionKeys.forEach((k) => { options[k] = changes[k].currentValue; });
         if (optionKeys.length > 0) {
+            // @ts-ignore
             this._manager.setOptions(this, options);
         }
     }
@@ -224,17 +236,25 @@ export class AgmCircle implements OnInit, OnChanges, OnDestroy {
         events.set('rightclick', this.rightClick);
 
         events.forEach((eventEmitter, eventName) => {
-            // @ts-ignore
             this._eventSubscriptions.push(
+                // @ts-ignore
                 this._manager.createEventObservable<MapMouseEvent>(eventName, this).subscribe((value) => {
                     switch (eventName) {
                         case 'radius_changed':
+                            // @ts-ignore
                             this._manager.getRadius(this).then((radius) => eventEmitter.emit(radius));
+                            this.getBounds().then(bounds => {
+                                this.mapService.circleBounds.next(bounds);
+                            });
                             break;
                         case 'center_changed':
+                            // @ts-ignore
                             this._manager.getCenter(this).then(
                                 (center) =>
                                     eventEmitter.emit(<LatLngLiteral>{lat: center.lat(), lng: center.lng()}));
+                            this.getBounds().then(bounds => {
+                                this.mapService.circleBounds.next(bounds);
+                            });
                             break;
                         default:
                             eventEmitter.emit(
@@ -248,13 +268,18 @@ export class AgmCircle implements OnInit, OnChanges, OnDestroy {
     ngOnDestroy() {
         this._eventSubscriptions.forEach(function(s: Subscription) { s.unsubscribe(); });
         this._eventSubscriptions = null;
+        // @ts-ignore
         this._manager.removeCircle(this);
     }
 
     /**
      * Gets the LatLngBounds of this Circle.
      */
-    getBounds(): Promise<LatLngBounds> { return this._manager.getBounds(this); }
+    getBounds(): Promise<LatLngBounds> {
+        // @ts-ignore
+        return this._manager.getBounds(this); }
 
-    getCenter(): Promise<LatLng> { return this._manager.getCenter(this); }
+    getCenter(): Promise<LatLng> {
+        // @ts-ignore
+        return this._manager.getCenter(this); }
 }

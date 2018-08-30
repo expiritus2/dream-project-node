@@ -1,18 +1,20 @@
 <agm-map
-        [latitude]="lat"
-        [longitude]="lng"
+        [latitude]="initLat"
+        [longitude]="initLng"
         [zoom]="zoom"
         [disableDefaultUI]="false"
         [zoomControl]="false"
         [fullscreenControl]="true"
         (mapClick)="onMapClicked($event)">
-    <agm-marker [latitude]="lat"
-                [longitude]="lng"
-                [markerDraggable]=""
-                (markerClick)="onClickMarker()"
-                (mouseOver)="onHoverMarker($event)"
-                (mouseOut)="onMouseOut($event)"
-                (dragEnd)="onMarkerDragEnd()">
+    <agm-marker
+            *ngFor="let marker of markers; let i = index"
+            [latitude]="marker.lat"
+            [longitude]="marker.lng"
+            [markerDraggable]="false"
+            (markerClick)="onClickMarker()"
+            (mouseOver)="onHoverMarker($event, i)"
+            (mouseOut)="onMouseOut($event, i)"
+            (dragEnd)="onMarkerDragEnd($event, i)">
         <agm-info-window>
             <p><strong>Marker name</strong></p>
             <p>
@@ -20,19 +22,23 @@
                   <img [src]="" style="max-width: 50px;">
                 </span>
             </p>
-            <a class="deleteMarker">Delete</a>
+            <a class="deleteMarker" (click)="onDeleteMarker(i)">Delete</a>
         </agm-info-window>
     </agm-marker>
     <agm-circle-custom
-                (radiusChange)="onRadiusChange($event)"
-                (centerChange)="onCenterChange($event)"
-                (dragStart)="onDragStart($event)"
-                (dragEnd)="onDragEnd($event)"
-                [strokeWeight]="0"
-                [latitude]="lat" [longitude]="lng"
-                [radius]="500"
-                [fillColor]="'red'"
-                [circleDraggable]="true"
-                [editable]="true">
+            *ngFor="let mark of markers; let j = index"
+            (radiusChange)="onRadiusChange($event, j)"
+            (centerChange)="onCenterChange($event, j)"
+            (dragStart)="onDragStart($event, j)"
+            (dragEnd)="onDragEnd($event, j)"
+            [strokeWeight]="0"
+            [fillOpacity]="0.1"
+            [latitude]="mark.circle.lat"
+            [longitude]="mark.circle.lng"
+            [radius]="500"
+            [fillColor]="'red'"
+            [circleDraggable]="true"
+            [editable]="true">
     </agm-circle-custom>
 </agm-map>
+<app-target-form *ngIf="isShowForm"></app-target-form>

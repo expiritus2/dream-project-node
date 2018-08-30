@@ -1,0 +1,25 @@
+<div class="opacity-layout">
+    <div class="target-form-holder">
+        <span class="close">&times;</span>
+        <form id="target-form" (ngSubmit)="onSubmit(f)" #f="ngForm">
+            <input
+                    #targetName
+                    list="target-names"
+                    name="target-name"
+                    placeholder="Target name"
+                    ngModel>
+            <datalist id="target-names">
+                <option *ngFor="let option of options" value="{{option}}"></option>
+            </datalist>
+            <input
+                    #targetImage
+                    type="file"
+                    id="target-image"
+                    name="target-image"
+                    ngModel>
+            <button (click)="onClickPrev()" type="button">Prev</button>
+            <button #next (click)="onClickNext()" type="submit">Next</button>
+            <button id="target-form-finish" [ngClass]="currentElIndex === formElements.length - 1 ? 'show-finish' : ''" (click)="onClickFinish()" type="submit">Finish</button>
+        </form>
+    </div>
+</div>
