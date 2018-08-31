@@ -18,8 +18,8 @@ import {GoogleMapComponent} from './personal-area/google-map/google-map.componen
 import {AgmCircle} from "./personal-area/google-map/directives/agm-circle.directive";
 import {MapService} from "./personal-area/google-map/service/map.service";
 import {TargetService} from "./personal-area/google-map/service/target.service";
-import { TargetFormComponent } from './personal-area/target-form/target-form.component';
-import {FormsModule} from "@angular/forms";
+import {TargetFormComponent} from './personal-area/target-form/target-form.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
     declarations: [
@@ -39,7 +39,7 @@ import {FormsModule} from "@angular/forms";
         BrowserModule,
         AppRoutingModule,
         HttpModule,
-        FormsModule,
+        ReactiveFormsModule,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyDZQ0NlqUu8LdwdDWwOxOYuHaBtDEkGJfo'
         })
