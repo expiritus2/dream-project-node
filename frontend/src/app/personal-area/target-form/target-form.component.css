@@ -12,8 +12,11 @@
 
 .target-form-holder {
     background: #ffffff;
-    padding: 20px;
+    padding: 30px;
     border-radius: 5px;
+    width: 95%;
+    max-width: 400px;
+    position: relative;
 }
 
 #target-form-finish{
@@ -25,7 +28,8 @@
 }
 
 .previewTargetImage{
-    max-height: 50px;
+    width: 33%;
+    height: 85px;
 }
 
 #target-form input,
@@ -47,12 +51,6 @@
     margin-top: 15px;
 }
 
-#buttons-holder{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
 .target-form-button {
     border: none;
     background: darkblue;
@@ -69,8 +67,31 @@
     opacity: .9;
 }
 
-.form-error[_ngcontent-c6] {
+.form-error {
     font-size: 1.6rem;
     margin: 5px 0;
     color: mediumvioletred;
+}
+
+#target-form-image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.target-form-button {
+    width: 100%;
+}
+
+.close {
+    font-size: 2.5rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+    width: 30px;
+    text-align: center;
+    height: 30px;
+    display: inline-block;
 }

@@ -1,6 +1,6 @@
 <div class="opacity-layout">
     <div class="target-form-holder">
-        <span class="close">&times;</span>
+        <span class="close" (click)="onCloseForm()">&times;</span>
         <form [formGroup]="form" id="target-form" (submit)="onSubmit()">
             <div class="target-form-input-holder">
                 <input list="target-names" formControlName="targetName" placeholder="Target name">
@@ -16,6 +16,10 @@
             </div>
 
             <div class="target-form-input-holder">
+                <input type="datetime-local" id="party-time"
+                       formControlName="datetime" [value]="today"/>
+            </div>
+            <div class="target-form-input-holder" id="target-form-image-wrapper" *ngIf="previewTargetImages.length > 0">
                 <img class="previewTargetImage" *ngFor="let imageAsUrl of previewTargetImages" [src]="imageAsUrl" alt="">
             </div>
 
@@ -23,10 +27,8 @@
                 <input #targetImage type="file" id="target-image" name="target-image" (change)="onImagePicked($event)" multiple>
             </div>
 
-            <div class="target-form-input-holder" id="buttons-holder">
-                <button class="target-form-button" (click)="onClickPrev()" type="button">Prev</button>
-                <button class="target-form-button" #next (click)="onClickNext()" type="submit">Next</button>
-                <button class="target-form-button" id="target-form-finish" [ngClass]="currentElIndex === formElements.length - 1 ? 'show-finish' : ''" (click)="onClickFinish()" type="submit">Finish</button>
+            <div class="target-form-input-holder">
+                <button class="target-form-button" type="submit">Submit</button>
             </div>
         </form>
     </div>

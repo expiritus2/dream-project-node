@@ -12,6 +12,7 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
     public initLat: number = 53.851047799999996;
     public initLng: number = 27.6673235;
     public markers = [];
+    public isNewMarker: boolean = false;
     public zoom: number = 14;
     public isShowForm = false;
     public circleBoundsSubscription: Subscription;
@@ -29,6 +30,15 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
             });
 
         // this.markers.push(marker);
+    }
+
+    onCloseForm(isShowForm: boolean){
+        this.isShowForm = !isShowForm;
+        if(this.isNewMarker) {
+            this.markers.pop();
+            this.isNewMarker = false;
+        }
+
     }
 
     ngOnDestroy(): void {
@@ -49,6 +59,7 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
     onMapClicked(event: any) {
         const {lat, lng} = event.coords;
         this.markers.push(new Marker(lat, lng));
+        this.isNewMarker = true;
         this.isShowForm = true;
     }
 
