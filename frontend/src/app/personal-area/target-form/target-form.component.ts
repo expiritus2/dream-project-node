@@ -1,5 +1,5 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import * as moment from 'moment';
 
 @Component({
@@ -13,7 +13,7 @@ export class TargetFormComponent implements OnInit {
 
     @Output() closeForm = new EventEmitter<boolean>();
 
-    public options;
+    public options= ["one", "two"];
     public today: string = moment().format('YYYY-MM-DDTHH:mm');
 
 
@@ -32,7 +32,9 @@ export class TargetFormComponent implements OnInit {
             targetDescription: new FormControl(null, {
                 validators: [Validators.required]
             }),
-            datetime: new FormControl(null),
+            datetime: new FormControl(null, {
+                validators: [Validators.required]
+            }),
             targetImage: new FormControl(null, {})
         });
     }
@@ -41,8 +43,12 @@ export class TargetFormComponent implements OnInit {
         this.isSubmit = true;
     }
 
-    onCloseForm() {
-        this.closeForm.emit(true)
+    onCloseForm(event: any) {
+        const isClose = [].includes.call(event.target.classList, "close");
+        const isOpacityLayout = [].includes.call(event.target.classList, "opacity-layout");
+        if(isClose || isOpacityLayout) {
+            this.closeForm.emit(true)
+        }
     }
 
 

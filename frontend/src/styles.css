@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import "~ng-pick-datetime/assets/style/picker.min.css";
 * {
     margin: 0;
     padding: 0;
@@ -12,4 +14,8 @@ body {
     height: 100%;
     font-size: 62.5%;
     font-family: sans-serif;
+}
+
+owl-date-time-container{
+    font-size: 1.5rem !important;
 }
