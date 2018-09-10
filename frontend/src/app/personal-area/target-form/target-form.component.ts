@@ -1,6 +1,8 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import * as moment from 'moment';
+import {mimeType} from "./mime-type.validator";
+import {TargetService} from "../google-map/service/target.service";
 
 @Component({
     selector: 'app-target-form',
@@ -13,14 +15,14 @@ export class TargetFormComponent implements OnInit {
 
     @Output() closeForm = new EventEmitter<boolean>();
 
-    public options= ["one", "two"];
+    public options = ["one", "two"];
     public today: string = moment().format('YYYY-MM-DDTHH:mm');
 
 
     public form: FormGroup;
     public isSubmit: boolean = false;
 
-    constructor() {
+    constructor(private targetService: TargetService) {
     }
 
     ngOnInit() {
@@ -35,18 +37,23 @@ export class TargetFormComponent implements OnInit {
             datetime: new FormControl(null, {
                 validators: [Validators.required]
             }),
-            targetImage: new FormControl(null, {})
+            targetImage: new FormControl(null, {
+                asyncValidators: [mimeType]
+            })
         });
     }
 
     onSubmit() {
         this.isSubmit = true;
+        console.log(this.form.value);
+        const {targetName, targetDescription, datetime, targetImage} = this.form.value;
+        this.targetService.sendTarget(targetName, targetDescription, datetime, targetImage);
     }
 
     onCloseForm(event: any) {
         const isClose = [].includes.call(event.target.classList, "close");
         const isOpacityLayout = [].includes.call(event.target.classList, "opacity-layout");
-        if(isClose || isOpacityLayout) {
+        if (isClose || isOpacityLayout) {
             this.closeForm.emit(true)
         }
     }
@@ -71,7 +78,5 @@ export class TargetFormComponent implements OnInit {
             && this.form.get(fieldName).touched
             && this.form.get(fieldName).errors
             && this.form.touched
-
     }
-
 }

@@ -19,6 +19,7 @@ app.use(cors);
 
 require('./services/auth/passport')(app);
 require('./routing/authRouting')(app);
+require('./routing/personalAreaRouting')(app);
 
 
 http.createServer(app).listen(port, () => {

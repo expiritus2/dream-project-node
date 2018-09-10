@@ -26,6 +26,7 @@
 
             <div class="target-form-input-holder">
                 <input #targetImage type="file" id="target-image" name="target-image" (change)="onImagePicked($event)" multiple>
+                <p class="form-error" *ngIf="isInvalid('targetImage')">Allow only listed extensions of file</p>
             </div>
 
             <div class="target-form-input-holder">
