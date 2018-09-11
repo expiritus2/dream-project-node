@@ -1,4 +1,5 @@
 const http = require('http');
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -11,10 +12,9 @@ mongoose.connect(process.env.mongoURI, {useNewUrlParser: true})
         (err) => console.log("Unable connect to database", err));
 
 const app = express();
-
-app.use(express.static('public'));
+app.use("/public", express.static(path.resolve(__dirname, 'public')));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors);
 
 require('./services/auth/passport')(app);

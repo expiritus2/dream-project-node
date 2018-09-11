@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import * as moment from 'moment';
 import {mimeType} from "./mime-type.validator";
-import {TargetService} from "../google-map/service/target.service";
+import {TargetService} from "./service/target.service";
 
 @Component({
     selector: 'app-target-form',
@@ -45,7 +45,6 @@ export class TargetFormComponent implements OnInit {
 
     onSubmit() {
         this.isSubmit = true;
-        console.log(this.form.value);
         const {targetName, targetDescription, datetime, targetImage} = this.form.value;
         this.targetService.sendTarget(targetName, targetDescription, datetime, targetImage);
     }

@@ -20,7 +20,7 @@ import {AgmCoreModule} from '@agm/core';
 import {GoogleMapComponent} from './personal-area/google-map/google-map.component';
 import {AgmCircle} from "./personal-area/google-map/directives/agm-circle.directive";
 import {MapService} from "./personal-area/google-map/service/map.service";
-import {TargetService} from "./personal-area/google-map/service/target.service";
+import {TargetService} from "./personal-area/target-form/service/target.service";
 import {TargetFormComponent} from './personal-area/target-form/target-form.component';
 import {ReactiveFormsModule} from "@angular/forms";
 

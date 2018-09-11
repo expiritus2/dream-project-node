@@ -9,7 +9,7 @@ const MIME_TYPE_MAP = {
 
 const storage = multer.diskStorage({
     destination: (req, files, cb) => {
-        const isValid = MIME_TYPE_MAP[file.mimetype];
+        const isValid = MIME_TYPE_MAP[files.mimetype];
         let error = new Error("Invalid mime type");
 
         if (isValid) {
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 });
 
 module.exports = (app) => {
-    app.post('/personal-area/put-target' ,checkAuth, multer({storage}).single("images") ,(req, res, next) => {
-        res.send(req.user);
+    app.post('/personal-area/put-target', checkAuth, multer({storage}).array("images[]") ,(req, res, next) => {
+        res.send("hello");
     });
 };

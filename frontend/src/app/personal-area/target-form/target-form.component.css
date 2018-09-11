@@ -30,6 +30,7 @@
 .previewTargetImage{
     width: 33%;
     height: 85px;
+    object-fit: cover;
 }
 
 #target-form input,

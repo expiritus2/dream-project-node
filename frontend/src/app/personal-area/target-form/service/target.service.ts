@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Http} from "@angular/http";
+import {Http, RequestOptions} from "@angular/http";
 
 @Injectable()
 export class TargetService {
@@ -11,15 +11,17 @@ export class TargetService {
         postData.append('targetName', targetName);
         postData.append('targetDescription', targetDescription);
         postData.append('datetime', datetime);
-        postData.append("images" ,targetImage[0], targetName);
-        // for(let i = 0; i < targetImage.length; i++) {
-        //     postData.append("images[]" ,targetImage[i], targetName);
-        // }
+        for(let i = 0; i < targetImage.length; i++) {
+            postData.append("images[]" ,targetImage[i], targetName);
+        }
 
+        const options = new RequestOptions({
+            withCredentials: true
+        });
 
-        this.http.post('http://localhost:3000/personal-area/put-target', postData)
+        this.http.post('http://localhost:3000/personal-area/put-target', postData, options)
             .subscribe(response => {
                 console.log(response);
-            })
+            });
     }
 }
