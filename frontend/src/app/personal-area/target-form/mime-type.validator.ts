@@ -59,11 +59,9 @@ export const mimeType = (
             });
 
             promise.then(validCount => {
-                console.log("resolve", validCount);
                 observer.next(null);
                 observer.complete();
             }, err => {
-                console.log("reject", validCount);
                 observer.next({invalidMimeType: true});
                 observer.complete();
             });
