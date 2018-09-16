@@ -1,7 +1,7 @@
 <div class="opacity-layout" (click)="onCloseForm($event)">
     <div class="target-form-holder">
         <span class="close" (click)="onCloseForm($event)">&times;</span>
-        <form [formGroup]="form" id="target-form" (submit)="onSubmit()">
+        <form [formGroup]="form" id="target-form" (ngSubmit)="onSubmit()">
             <div class="target-form-input-holder">
                 <input list="target-names" formControlName="targetName" placeholder="Target name">
                 <datalist id="target-names">
@@ -20,13 +20,16 @@
                 <owl-date-time #dt1></owl-date-time>
                 <p class="form-error" *ngIf="isInvalid('datetime')">Please fill form correctly</p>
             </div>
-            <div class="target-form-input-holder" id="target-form-image-wrapper" *ngIf="previewTargetImages.length > 0">
+            <div class="target-form-input-holder" id="target-form-image-wrapper" *ngIf="previewTargetImages?.length > 0">
                 <img class="previewTargetImage" *ngFor="let imageAsUrl of previewTargetImages" [src]="imageAsUrl" alt="">
             </div>
 
             <div class="target-form-input-holder">
                 <input #targetImage type="file" id="target-image" name="target-image" (change)="onImagePicked($event)" multiple>
                 <p class="form-error" *ngIf="isInvalid('targetImage')">Allow only listed extensions of file</p>
+            </div>
+            <div class="target-form-server-error">
+                <p class="form-error" *ngIf="serverError">Some error was occuired on the server. Target object hasn't been saved</p>
             </div>
 
             <div class="target-form-input-holder">

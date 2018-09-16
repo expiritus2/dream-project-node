@@ -1,6 +1,8 @@
 const checkAuth = require('../middleware/check-auth');
 const multer = require('multer');
 
+const TargetObjectController = require('../controllers/targetObject');
+
 const MIME_TYPE_MAP = {
     'image/png': 'png',
     'image/jpeg': 'jpg',
@@ -25,7 +27,5 @@ const storage = multer.diskStorage({
 });
 
 module.exports = (app) => {
-    app.post('/personal-area/put-target', checkAuth, multer({storage}).array("images[]") ,(req, res, next) => {
-        res.send("hello");
-    });
+    app.post('/personal-area/put-target', checkAuth, multer({storage}).array("images[]"), TargetObjectController.createTargetObject);
 };

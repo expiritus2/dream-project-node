@@ -46,8 +46,6 @@ export const mimeType = (
                             resolve(validCount);
                         }
 
-                        console.log("i", i);
-                        console.log("files", files.length - 1);
                         if(i === files.length - 1 && validCount < files.length) {
                             reject(validCount);
                         }

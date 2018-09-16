@@ -32,10 +32,12 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
         // this.markers.push(marker);
     }
 
-    onCloseForm(isShowForm: boolean){
-        this.isShowForm = !isShowForm;
+    onCloseForm(event: {close: boolean, targetAdded: boolean}){
+        this.isShowForm = !event.close;
         if(this.isNewMarker) {
-            this.markers.pop();
+            if(!event.targetAdded) {
+                this.markers.pop();
+            }
             this.isNewMarker = false;
         }
 

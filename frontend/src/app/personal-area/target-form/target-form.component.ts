@@ -1,6 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import * as moment from 'moment';
 import {mimeType} from "./mime-type.validator";
 import {TargetService} from "./service/target.service";
 
@@ -13,11 +12,10 @@ export class TargetFormComponent implements OnInit {
 
     public previewTargetImages: string[] = [];
 
-    @Output() closeForm = new EventEmitter<boolean>();
+    @Output() closeForm = new EventEmitter<{ close: boolean, targetAdded: boolean }>();
 
     public options = ["one", "two"];
-    public today: string = moment().format('YYYY-MM-DDTHH:mm');
-
+    public serverError: boolean = false;
 
     public form: FormGroup;
     public isSubmit: boolean = false;
@@ -46,14 +44,38 @@ export class TargetFormComponent implements OnInit {
     onSubmit() {
         this.isSubmit = true;
         const {targetName, targetDescription, datetime, targetImage} = this.form.value;
-        this.targetService.sendTarget(targetName, targetDescription, datetime, targetImage);
+        const {controls} = this.form;
+        let isErrorExist = this.checkErrors(controls);
+
+        if (!isErrorExist) {
+            this.targetService.sendTarget(targetName, targetDescription, new Date(datetime).getTime(), targetImage)
+                .subscribe(response => {
+                        this.closeForm.emit({close: true, targetAdded: true});
+                        console.log(response);
+                    },
+                    err => {
+                        this.serverError = true
+                    })
+        }
+
+    }
+
+    private checkErrors(controls: object){
+        let isErrorExist = false;
+        Object.keys(controls).forEach(key => {
+            if (controls[key].errors) {
+                isErrorExist = true;
+            }
+        });
+
+        return isErrorExist;
     }
 
     onCloseForm(event: any) {
         const isClose = [].includes.call(event.target.classList, "close");
         const isOpacityLayout = [].includes.call(event.target.classList, "opacity-layout");
         if (isClose || isOpacityLayout) {
-            this.closeForm.emit(true)
+            this.closeForm.emit({close: true, targetAdded: false})
         }
     }
 

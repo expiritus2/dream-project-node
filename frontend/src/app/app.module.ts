@@ -22,7 +22,7 @@ import {AgmCircle} from "./personal-area/google-map/directives/agm-circle.direct
 import {MapService} from "./personal-area/google-map/service/map.service";
 import {TargetService} from "./personal-area/target-form/service/target.service";
 import {TargetFormComponent} from './personal-area/target-form/target-form.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
     declarations: [
@@ -45,6 +45,7 @@ import {ReactiveFormsModule} from "@angular/forms";
         OwlNativeDateTimeModule,
         AppRoutingModule,
         HttpModule,
+        FormsModule,
         ReactiveFormsModule,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyDZQ0NlqUu8LdwdDWwOxOYuHaBtDEkGJfo'
