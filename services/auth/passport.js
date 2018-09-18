@@ -1,9 +1,7 @@
-require('../../models/User');
-const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = mongoose.model('users');
+const User = require('../../models/User');
 
 
 module.exports = (app) => {
@@ -41,7 +39,7 @@ module.exports = (app) => {
     });
 
     passport.deserializeUser(async (id, done) => {
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate('targetObject');
         done(null, user);
     });
 

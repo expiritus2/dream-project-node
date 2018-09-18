@@ -1,22 +1,24 @@
-const User = require('../models/User');
-
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
-const targetSchema = new Schema({
+const TargetSchema = new Schema({
     targetName: {
         type: String,
         lowercase: true,
         trim: true,
-        required: true
+        required: [true, "Name of target is required"],
+        validate: {
+            validator: (targetName) => targetName.length > 3,
+            message: 'Name of object must be longer than 3 characters'
+        }
     },
     targetDescription: {
         type: String,
-        required: true
+        required: [true, "Description is required"]
     },
     datetime: {
         type: Date,
-        required: true
+        required: [true, "Datetime is required"]
     },
     images: {
         type: [String]
@@ -28,8 +30,10 @@ const targetSchema = new Schema({
     },
     _userId: {
         type: Schema.Types.ObjectId,
-        ref: User
+        ref: 'user'
     }
 });
 
-mongoose.model('targetObject', targetSchema);
+const TargetObject = mongoose.model('targetObject', TargetSchema);
+
+module.exports = TargetObject;

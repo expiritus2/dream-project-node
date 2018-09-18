@@ -1,6 +1,4 @@
-require('../models/TargetObject');
-const mongoose = require('mongoose');
-const TargetObject = mongoose.model('targetObject');
+const TargetObject = require('../models/TargetObject');
 
 exports.createTargetObject = (req, res, next) => {
     const {body, files, user} = req;
@@ -14,7 +12,7 @@ exports.createTargetObject = (req, res, next) => {
         targetDescription: body.targetDescription,
         datetime: body.datetime,
         images: fileNames,
-        _userId: user.id
+        _userId: user
     });
 
     targetObject.save();
