@@ -5,24 +5,24 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 
 import {AppComponent} from './app.component';
-import {HomeComponent} from './home/home.component';
-import {PersonalAreaComponent} from './personal-area/personal-area.component';
-import {AdminComponent} from './admin/admin.component';
+import {HomeComponent} from './components/home/home.component';
+import {PersonalAreaComponent} from './components/personal-area/personal-area.component';
+import {AdminComponent} from './components/admin/admin.component';
 import {AppRoutingModule} from "./app-routing.module";
-import {HeaderComponent} from './layout/header/header.component';
-import {FooterComponent} from './layout/footer/footer.component';
-import {AuthService} from "./service/auth.service";
-import {HttpModule} from "@angular/http";
-import {AuthGuard} from "./service/auth-guard.service";
-import {AuthorisedComponent} from './helpers/authorised/authorised.component';
-import {LogoutComponent} from './helpers/logout/logout.component';
+import {HeaderComponent} from './components/layout/header/header.component';
+import {FooterComponent} from './components/layout/footer/footer.component';
+import {AuthService} from "./services/auth.service";
+import {AuthGuard} from "./services/auth-guard.service";
+import {AuthorisedComponent} from './components/helpers/authorised/authorised.component';
+import {LogoutComponent} from './components/helpers/logout/logout.component';
 import {AgmCoreModule} from '@agm/core';
-import {GoogleMapComponent} from './personal-area/google-map/google-map.component';
-import {AgmCircle} from "./personal-area/google-map/directives/agm-circle.directive";
-import {MapService} from "./personal-area/google-map/service/map.service";
-import {TargetService} from "./personal-area/target-form/service/target.service";
-import {TargetFormComponent} from './personal-area/target-form/target-form.component';
+import {GoogleMapComponent} from './components/personal-area/google-map/google-map.component';
+import {AgmCircle} from "./components/personal-area/google-map/agm-circle.directive";
+import {MapService} from "./services/map.service";
+import {TargetService} from "./services/target.service";
+import {TargetFormComponent} from './components/personal-area/target-form/target-form.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
     declarations: [
@@ -44,7 +44,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
         AppRoutingModule,
-        HttpModule,
+        HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
         AgmCoreModule.forRoot({

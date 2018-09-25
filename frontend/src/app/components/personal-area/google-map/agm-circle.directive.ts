@@ -12,7 +12,7 @@ import {MouseEvent} from '@agm/core/map-types';
 import {MouseEvent as MapMouseEvent} from '@agm/core/services/google-maps-types';
 import {CircleManager, LatLngBounds, LatLngLiteral, LatLng} from "@agm/core";
 import {Subscription} from "rxjs";
-import {MapService} from "../service/map.service";
+import {MapService} from "../../../services/map.service";
 
 @Directive({
     selector: 'agm-circle-custom'

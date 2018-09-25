@@ -1,7 +1,7 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {mimeType} from "./mime-type.validator";
-import {TargetService} from "./service/target.service";
+import {TargetService} from "../../../services/target.service";
 
 @Component({
     selector: 'app-target-form',
@@ -19,6 +19,8 @@ export class TargetFormComponent implements OnInit {
 
     public form: FormGroup;
     public isSubmit: boolean = false;
+
+    @Input() coords: {lat: number, lng: number};
 
     constructor(private targetService: TargetService) {
     }
@@ -48,7 +50,7 @@ export class TargetFormComponent implements OnInit {
         let isErrorExist = this.checkErrors(controls);
 
         if (!isErrorExist) {
-            this.targetService.sendTarget(targetName, targetDescription, new Date(datetime).getTime(), targetImage)
+            this.targetService.sendTarget(targetName, targetDescription, new Date(datetime).getTime(), targetImage, this.coords)
                 .subscribe(response => {
                         this.closeForm.emit({close: true, targetAdded: true});
                         console.log(response);

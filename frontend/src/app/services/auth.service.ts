@@ -1,7 +1,7 @@
-import {User} from "../models/user.mode";
-import {Http} from "@angular/http";
+import {User} from "../models/user.model";
 import {Injectable} from "@angular/core";
 import {Subject} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable()
 export class AuthService {
@@ -9,17 +9,17 @@ export class AuthService {
     public currentUser = new Subject<User>();
     public unauthorized = new Subject<{status: number}>();
 
-    constructor(private http: Http) {
+    constructor(private http: HttpClient) {
     }
 
     auth() {
         return this.http.get('/auth/current_user').subscribe(
-            (response) => {
-                const json = response.json();
-                const email = json.userInfo.emails[0].value;
-                const role = json.role;
-                const fullName = `${json.userInfo.firstName} ${json.userInfo.lastName}`;
-                this.user = new User(email, role, fullName);
+            (response: {_id: string, userInfo: {emails: object, firstName: string, lastName: string}, role: string}) => {
+                const id = response._id;
+                const email = response.userInfo.emails[0].value;
+                const role = response.role;
+                const fullName = `${response.userInfo.firstName} ${response.userInfo.lastName}`;
+                this.user = new User(id, email, role, fullName);
                 this.currentUser.next(this.user);
             }, err => {
                 this.unauthorized.next({status: err.status});

@@ -9,7 +9,7 @@ export const mimeType = (
     return Observable.create((observer: Observer<{ [key: string]: any }>) => {
         let isValid = false;
         if (files) {
-            let validCount = 0;
+            let validCount = 1;
             const promise = new Promise((resolve, reject) => {
 
                 for (let i = 0; i < files.length; i++) {
@@ -60,6 +60,7 @@ export const mimeType = (
                 observer.next(null);
                 observer.complete();
             }, err => {
+                console.log(err);
                 observer.next({invalidMimeType: true});
                 observer.complete();
             });

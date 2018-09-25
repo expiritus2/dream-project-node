@@ -41,4 +41,7 @@
             [editable]="true">
     </agm-circle-custom>
 </agm-map>
-<app-target-form (closeForm)="onCloseForm($event)" *ngIf="isShowForm"></app-target-form>
+<app-target-form
+        [coords]="coordsNewMarker"
+        (closeForm)="onCloseForm($event)"
+        *ngIf="isShowForm"></app-target-form>

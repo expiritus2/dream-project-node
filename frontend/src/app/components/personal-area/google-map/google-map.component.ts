@@ -1,7 +1,9 @@
 import {Component, EventEmitter, OnDestroy, OnInit} from '@angular/core';
-import {MapService} from "./service/map.service";
+import {MapService} from "../../../services/map.service";
 import {Subscription} from "rxjs";
-import {Marker} from "./models/marker.model";
+import {Marker} from "../../../models/marker.model";
+import {AuthService} from "../../../services/auth.service";
+import {TargetService} from "../../../services/target.service";
 
 @Component({
     selector: 'app-google-map',
@@ -13,16 +15,21 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
     public initLng: number = 27.6673235;
     public markers = [];
     public isNewMarker: boolean = false;
+    public coordsNewMarker: {lat: number, lng: number};
     public zoom: number = 14;
     public isShowForm = false;
     public circleBoundsSubscription: Subscription;
+    public targetObjectsSubscription: Subscription;
 
-    constructor(private mapService: MapService) {
+    constructor(private mapService: MapService,
+                private authService: AuthService,
+                private targetService: TargetService) {
 
     }
 
     ngOnInit() {
         this.getLocation();
+        this.getOwnTargetObject();
         // const marker = new Marker(53.851047799999996, 27.6673235);
         this.circleBoundsSubscription = this.mapService.getCircleBoundsAsObservable()
             .subscribe(bounds => {
@@ -30,6 +37,15 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
             });
 
         // this.markers.push(marker);
+    }
+
+    getOwnTargetObject(){
+        this.targetObjectsSubscription = this.targetService.getTargetObjects()
+            .subscribe(response => {
+                console.log(response)
+            }, err => {
+                console.log(err);
+            });
     }
 
     onCloseForm(event: {close: boolean, targetAdded: boolean}){
@@ -41,10 +57,6 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
             this.isNewMarker = false;
         }
 
-    }
-
-    ngOnDestroy(): void {
-        this.circleBoundsSubscription.unsubscribe();
     }
 
     getLocation() {
@@ -60,9 +72,11 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
 
     onMapClicked(event: any) {
         const {lat, lng} = event.coords;
-        this.markers.push(new Marker(lat, lng));
+        const marker = new Marker(lat, lng);
+        this.markers.push(marker);
         this.isNewMarker = true;
         this.isShowForm = true;
+        this.coordsNewMarker = {lat, lng};
     }
 
     onDeleteMarker(index: number) {
@@ -96,6 +110,10 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
 
     onDragStart(event: EventEmitter<MouseEvent>, index: number) {
         console.log(event);
+    }
+
+    ngOnDestroy(): void {
+        this.circleBoundsSubscription.unsubscribe();
     }
 
 }
