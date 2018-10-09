@@ -8,8 +8,8 @@ const TargetSchema = new Schema({
         trim: true,
         required: [true, "Name of target is required"],
         validate: {
-            validator: (targetName) => targetName.length > 3,
-            message: 'Name of object must be longer than 3 characters'
+            validator: (targetName) => targetName.length > 2,
+            message: 'Name of object must be longer than 2 characters'
         }
     },
     targetDescription: {
@@ -22,6 +22,14 @@ const TargetSchema = new Schema({
     },
     images: {
         type: [String]
+    },
+
+    lat: {
+        type: String
+    },
+
+    lng: {
+        type: String
     },
 
     created: {
