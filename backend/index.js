@@ -7,7 +7,12 @@ const cors = require('./middleware/cors');
 const port = process.env.PORT || 3000;
 
 mongoose.set('useFindAndModify', false);
-mongoose.connect(process.env.mongoURI, {useNewUrlParser: true}).then(
+
+const options = {
+    useNewUrlParser: true,
+    useCreateIndex: true
+};
+mongoose.connect(process.env.mongoURI, options).then(
     () => console.log("Connect to database"),
     (err) => console.log("Unable connect to database", err));
 

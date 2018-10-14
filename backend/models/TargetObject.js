@@ -24,23 +24,28 @@ const TargetSchema = new Schema({
         type: [String]
     },
 
-    lat: {
-        type: String
-    },
-
-    lng: {
-        type: String
+    location: {
+        type: {
+            type: String,
+            default: 'Poing'
+        },
+        coordinates: {
+            type: [Number],
+            default: [0, 0]
+        }
     },
 
     created: {
         type: Date,
         default: Date.now()
     },
-    _userId: {
+    _user: {
         type: Schema.Types.ObjectId,
         ref: 'user'
     }
 });
+
+TargetSchema.index({ location: "2dsphere" });
 
 const TargetObject = mongoose.model('targetObject', TargetSchema);
 

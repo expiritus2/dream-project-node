@@ -21,13 +21,13 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const name = file.originalname.toLowerCase().split(' ').join('-');
-        const ext = MIME_TYPE_MAP[file.mimetype];
-        cb(null, name + '-' + Date.now() + '.' + ext);
+        // const ext = MIME_TYPE_MAP[file.mimetype];
+        cb(null, Date.now() + '-' + name);
     }
 });
 
 module.exports = (app) => {
     app.post('/personal-area/put-target', checkAuth, multer({storage}).array("images[]"), TargetObjectController.createTargetObject);
 
-    app.get('/personal-area/get-target-objects', checkAuth, TargetObjectController.getTargetObjects);
+    app.get('/personal-area/get-target-objects', checkAuth, TargetObjectController.getTargetObjectsByRequest);
 };
