@@ -29,5 +29,5 @@ const storage = multer.diskStorage({
 module.exports = (app) => {
     app.post('/personal-area/put-target', checkAuth, multer({storage}).array("images[]"), TargetObjectController.createTargetObject);
 
-    app.get('/personal-area/get-target-objects', checkAuth, TargetObjectController.getTargetObjectsByRequest);
+    app.get('/personal-area/get-target-objects', checkAuth, TargetObjectController.getRelatedObjectsByUser);
 };

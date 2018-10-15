@@ -25,21 +25,24 @@
             <a class="deleteMarker" (click)="onDeleteMarker(i)">Delete</a>
         </agm-info-window>
     </agm-marker>
-    <agm-circle-custom
-            *ngFor="let mark of markers; let j = index"
-            (radiusChange)="onRadiusChange($event, j)"
-            (centerChange)="onCenterChange($event, j)"
-            (dragStart)="onDragStart($event, j)"
-            (dragEnd)="onDragEnd($event, j)"
-            [strokeWeight]="0"
-            [fillOpacity]="0.1"
-            [latitude]="mark.circle.lat"
-            [longitude]="mark.circle.lng"
-            [radius]="500"
-            [fillColor]="'red'"
-            [circleDraggable]="true"
-            [editable]="true">
-    </agm-circle-custom>
+    <div *ngFor="let mark of markers; let j = index">
+        <agm-circle-custom
+                *ngIf="currentUser.id === mark.userId"
+                (radiusChange)="onRadiusChange($event, j)"
+                (centerChange)="onCenterChange($event, j)"
+                (dragStart)="onDragStart($event, j)"
+                (dragEnd)="onDragEnd($event, j)"
+                [strokeWeight]="0"
+                [fillOpacity]="0.1"
+                [latitude]="mark.circle.lat"
+                [longitude]="mark.circle.lng"
+                [radius]="mark.radius"
+                [fillColor]="'red'"
+                [circleDraggable]="currentUser.id === mark.userId"
+                [editable]="true">
+        </agm-circle-custom>
+    </div>
+
 </agm-map>
 <app-target-form
         [coords]="coordsNewMarker"

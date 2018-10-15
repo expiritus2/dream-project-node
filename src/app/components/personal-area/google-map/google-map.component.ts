@@ -4,6 +4,7 @@ import {Subscription} from "rxjs";
 import {Marker} from "../../../models/marker.model";
 import {AuthService} from "../../../services/auth.service";
 import {TargetService} from "../../../services/target.service";
+import {User} from "../../../models/user.model";
 
 @Component({
     selector: 'app-google-map',
@@ -17,9 +18,11 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
     public isNewMarker: boolean = false;
     public coordsNewMarker: {lat: number, lng: number};
     public zoom: number = 14;
+    public initCircleRadius = 500;
     public isShowForm = false;
     public circleBoundsSubscription: Subscription;
     public targetObjectsSubscription: Subscription;
+    public currentUser: User = null;
 
     constructor(private mapService: MapService,
                 private authService: AuthService,
@@ -29,8 +32,8 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getLocation();
-        this.getOwnTargetObject();
-        // const marker = new Marker(53.851047799999996, 27.6673235);
+        this.currentUser = this.authService.getCurrentUser();
+        this.getRelatedObjects();
         this.circleBoundsSubscription = this.mapService.getCircleBoundsAsObservable()
             .subscribe(bounds => {
                 // marker.circle.setBounds(bounds);
@@ -39,10 +42,18 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
         // this.markers.push(marker);
     }
 
-    getOwnTargetObject(){
+    getRelatedObjects(){
         this.targetObjectsSubscription = this.targetService.getTargetObjects()
-            .subscribe(response => {
-                console.log(response)
+            .subscribe((response: {relatedObjects}) => {
+                const {relatedObjects} = response;
+                relatedObjects && relatedObjects.forEach((object) => {
+                    const lat = object.location.coordinates[1];
+                    const lng = object.location.coordinates[0];
+                    const userId = this.currentUser.id;
+                    const relatedMarker = new Marker(lat, lng, this.initCircleRadius, userId);
+                    this.markers.push(relatedMarker)
+                });
+                console.log(this.markers);
             }, err => {
                 console.log(err);
             });
@@ -72,7 +83,8 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
 
     onMapClicked(event: any) {
         const {lat, lng} = event.coords;
-        const marker = new Marker(lat, lng);
+        const userId = this.currentUser.id;
+        const marker = new Marker(lat, lng, this.initCircleRadius, userId);
         this.markers.push(marker);
         this.isNewMarker = true;
         this.isShowForm = true;
@@ -95,7 +107,7 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
 
 
     onRadiusChange(event: EventEmitter<number>, index: number){
-        // console.log(event);
+        console.log(event);
     }
 
     onCenterChange(event: any, index: number) {

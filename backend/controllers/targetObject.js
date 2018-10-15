@@ -1,10 +1,11 @@
 const TargetObject = require('../models/TargetObject');
 
 
-const getTargetObjects = (req, radius, selfId) => {
+const getRelatedObjectsByCoordinates = (req, radius) => {
     const {body} = req;
     const latitude = parseFloat(body.lat);
     const longitude = parseFloat(body.lng);
+
     return TargetObject.find({
         location: {
             $geoWithin: {
@@ -13,8 +14,7 @@ const getTargetObjects = (req, radius, selfId) => {
                     radius / 6378.1
                 ]
             }
-        },
-        _id: {$not: {$eq: selfId}}
+        }
     });
 };
 
@@ -43,9 +43,8 @@ exports.createTargetObject = (req, res, next) => {
 
 
     targetObject.save()
-        .then((response) => {
-            const selfId = response._id;
-            getTargetObjects(req, 0.5, selfId)
+        .then(() => {
+            getRelatedObjectsByCoordinates(req, 0.5)
                 .then((response) => {
                     res.status(200).send({
                         message: "Target object was added successfully",
@@ -55,6 +54,11 @@ exports.createTargetObject = (req, res, next) => {
         });
 };
 
-exports.getTargetObjectsByRequest = (req, res, next) => {
+exports.getRelatedObjectsByUser = (req, res, next) => {
+    const {user} = req;
+    TargetObject.find({_user: user.id})
+        .then(response => {
+            res.status(200).send({relatedObjects: response})
+        })
 
 };

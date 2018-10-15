@@ -10,6 +10,7 @@ export class PersonalAreaComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+
   }
 
 }
