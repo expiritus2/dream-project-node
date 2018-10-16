@@ -1,8 +1,11 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
+import {Subject} from "rxjs";
 
 @Injectable()
 export class TargetService {
+
+    public relatedObjects = new Subject<{relatedObjects: object, isNew: boolean}>();
 
     constructor(private http: HttpClient) {}
 
@@ -24,6 +27,17 @@ export class TargetService {
     }
 
     getTargetObjects(){
-        return this.http.get('http://localhost:3000/personal-area/get-target-objects', {withCredentials: true});
+        return this.http.get('http://localhost:3000/personal-area/get-target-objects', {withCredentials: true})
+            .subscribe((response: {relatedObjects: object}) => {
+                const modifiedResponse = {
+                    ...response,
+                    isNew: false
+                };
+               this.relatedObjects.next(modifiedResponse)
+            });
+    }
+
+    getRelatedObjectsAsObservable(){
+        return this.relatedObjects.asObservable();
     }
 }

@@ -5,6 +5,7 @@ import {Marker} from "../../../models/marker.model";
 import {AuthService} from "../../../services/auth.service";
 import {TargetService} from "../../../services/target.service";
 import {User} from "../../../models/user.model";
+import {TargetInfo} from "../../../models/target-info.model";
 
 @Component({
     selector: 'app-google-map',
@@ -16,7 +17,7 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
     public initLng: number = 27.6673235;
     public markers = [];
     public isNewMarker: boolean = false;
-    public coordsNewMarker: {lat: number, lng: number};
+    public coordsNewMarker: { lat: number, lng: number };
     public zoom: number = 14;
     public initCircleRadius = 500;
     public isShowForm = false;
@@ -33,6 +34,7 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.getLocation();
         this.currentUser = this.authService.getCurrentUser();
+        this.targetService.getTargetObjects();
         this.getRelatedObjects();
         this.circleBoundsSubscription = this.mapService.getCircleBoundsAsObservable()
             .subscribe(bounds => {
@@ -42,27 +44,34 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
         // this.markers.push(marker);
     }
 
-    getRelatedObjects(){
-        this.targetObjectsSubscription = this.targetService.getTargetObjects()
-            .subscribe((response: {relatedObjects}) => {
-                const {relatedObjects} = response;
+    getRelatedObjects() {
+        this.targetObjectsSubscription = this.targetService.getRelatedObjectsAsObservable()
+            .subscribe((response: { relatedObjects: any, isNew: boolean }) => {
+                const {relatedObjects, isNew} = response;
+                console.log(relatedObjects);
                 relatedObjects && relatedObjects.forEach((object) => {
                     const lat = object.location.coordinates[1];
                     const lng = object.location.coordinates[0];
                     const userId = this.currentUser.id;
                     const relatedMarker = new Marker(lat, lng, this.initCircleRadius, userId);
-                    this.markers.push(relatedMarker)
+
+                    const {targetName, targetDescription, images, datetime, created} = object;
+                    const targetInfo = new TargetInfo(targetName, targetDescription, images, datetime, created);
+                    relatedMarker.setTargetInfo(targetInfo);
+                    if(!isNew){
+                        this.markers.push(relatedMarker);
+                    }
                 });
-                console.log(this.markers);
             }, err => {
                 console.log(err);
             });
+
     }
 
-    onCloseForm(event: {close: boolean, targetAdded: boolean}){
+    onCloseForm(event: { close: boolean, targetAdded: boolean }) {
         this.isShowForm = !event.close;
-        if(this.isNewMarker) {
-            if(!event.targetAdded) {
+        if (this.isNewMarker) {
+            if (!event.targetAdded) {
                 this.markers.pop();
             }
             this.isNewMarker = false;
@@ -95,18 +104,20 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
         this.markers.splice(index, 1);
     }
 
-    onClickMarker(){}
+    onClickMarker() {
+    }
 
-    onHoverMarker(){}
+    onHoverMarker() {
+    }
 
-    onMouseOut(){}
+    onMouseOut() {
+    }
 
-    onMarkerDragEnd(){}
+    onMarkerDragEnd() {
+    }
 
 
-
-
-    onRadiusChange(event: EventEmitter<number>, index: number){
+    onRadiusChange(event: EventEmitter<number>, index: number) {
         console.log(event);
     }
 
@@ -126,6 +137,7 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.circleBoundsSubscription.unsubscribe();
+        this.targetObjectsSubscription.unsubscribe();
     }
 
 }

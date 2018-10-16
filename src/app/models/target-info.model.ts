@@ -2,7 +2,8 @@
 export class TargetInfo {
 
     constructor(private targetName: string,
-                private description: string,
-                private date: number,
-                private targetImage: File[]) {}
+                private targetDescription: string,
+                private images: [string],
+                private datetime: string,
+                private created: string) {}
 }

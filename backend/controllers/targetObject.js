@@ -56,9 +56,10 @@ exports.createTargetObject = (req, res, next) => {
 
 exports.getRelatedObjectsByUser = (req, res, next) => {
     const {user} = req;
-    TargetObject.find({_user: user.id})
-        .then(response => {
-            res.status(200).send({relatedObjects: response})
-        })
-
+    TargetObject.aggregate([
+        {$project: {_id: 1, targetName: 1, targetDescription: 1, location: 1, images: 1, datetime: 1, created: 1, _user: 1}}
+    ], (err, result) => {
+        console.log("res", result);
+        res.status(200).send({message: "OK",});
+    });
 };

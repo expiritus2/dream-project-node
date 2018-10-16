@@ -51,15 +51,15 @@ export class TargetFormComponent implements OnInit {
 
         if (!isErrorExist) {
             this.targetService.sendTarget(targetName, targetDescription, new Date(datetime).getTime(), targetImage, this.coords)
-                .subscribe(response => {
+                .subscribe((response: {relatedObjects}) => {
                         this.closeForm.emit({close: true, targetAdded: true});
-                        console.log(response);
+                        const {relatedObjects} = response;
+                        this.targetService.relatedObjects.next({relatedObjects, isNew: true});
                     },
                     err => {
                         this.serverError = true
                     })
         }
-
     }
 
     private checkErrors(controls: object){

@@ -13,7 +13,7 @@ export class AuthService {
     }
 
     auth() {
-        return this.http.get('/auth/current_user').subscribe(
+        this.http.get('/auth/current_user').subscribe(
             (response: {_id: string, userInfo: {emails: object, firstName: string, lastName: string}, role: string}) => {
                 const id = response._id;
                 const email = response.userInfo.emails[0].value;
