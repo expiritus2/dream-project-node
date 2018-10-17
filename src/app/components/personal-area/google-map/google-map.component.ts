@@ -47,20 +47,22 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
     getRelatedObjects() {
         this.targetObjectsSubscription = this.targetService.getRelatedObjectsAsObservable()
             .subscribe((response: { relatedObjects: any, isNew: boolean }) => {
+                console.log(response);
                 const {relatedObjects, isNew} = response;
-                console.log(relatedObjects);
                 relatedObjects && relatedObjects.forEach((object) => {
                     const lat = object.location.coordinates[1];
                     const lng = object.location.coordinates[0];
-                    const userId = this.currentUser.id;
+                    const userId = object._user;
                     const relatedMarker = new Marker(lat, lng, this.initCircleRadius, userId);
 
                     const {targetName, targetDescription, images, datetime, created} = object;
                     const targetInfo = new TargetInfo(targetName, targetDescription, images, datetime, created);
                     relatedMarker.setTargetInfo(targetInfo);
-                    if(!isNew){
+                    // if(!isNew){
                         this.markers.push(relatedMarker);
-                    }
+                        // console.log(this.markers);
+                        // console.log(this.currentUser);
+                    // }
                 });
             }, err => {
                 console.log(err);
