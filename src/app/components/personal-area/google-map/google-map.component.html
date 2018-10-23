@@ -14,15 +14,18 @@
             (markerClick)="onClickMarker()"
             (mouseOver)="onHoverMarker($event, i)"
             (mouseOut)="onMouseOut($event, i)"
-            (dragEnd)="onMarkerDragEnd($event, i)">
-        <agm-info-window>
+            (dragEnd)="onMarkerDragEnd($event, i)"
+            [iconUrl]="currentUser.id === marker.userId ? redIcon : blueIcon ">
+        <agm-info-window
+            [isOpen]="true"
+        >
             <p><strong>Marker name</strong></p>
             <p>
                 <span>
                   <img [src]="" style="max-width: 50px;">
                 </span>
             </p>
-            <a class="deleteMarker" (click)="onDeleteMarker(i)">Delete</a>
+            <a *ngIf="currentUser.id === marker.userId" class="deleteMarker" (click)="onDeleteMarker(i)">Delete</a>
         </agm-info-window>
     </agm-marker>
     <div *ngFor="let mark of markers; let j = index">

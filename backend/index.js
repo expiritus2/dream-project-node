@@ -17,7 +17,8 @@ mongoose.connect(process.env.mongoURI, options).then(
     (err) => console.log("Unable connect to database", err));
 
 const app = express();
-app.use("/public", express.static(path.resolve(__dirname, 'public')));
+// app.use("/public", express.static(path.resolve(__dirname, 'public')));
+app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors);

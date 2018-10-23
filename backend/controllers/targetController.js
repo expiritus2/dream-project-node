@@ -1,4 +1,5 @@
 const TargetObject = require('../models/TargetObject');
+const _ = require('lodash');
 
 
 const targetController = {
@@ -61,44 +62,77 @@ const targetController = {
             }, err => console.log(err));
     },
 
-    getRelatedObjectsByUser(req, res, next) {
+    async getRelatedObjectsByUser(req, res, next) {
         const {user} = req;
         let relatedObjects = [];
 
-        TargetObject.find({_user: user._id}).then(ownObjects => {
-            relatedObjects = [...ownObjects];
-            ownObjects.length && ownObjects.forEach((object, index) => {
-                const {coordinates} = object.location;
-                TargetObject.find({
-                    location: {
-                        $geoWithin: {
-                            $centerSphere: [
-                                coordinates,
-                                0.5 / 6378.1
-                            ]
-                        }
-                    },
-                    "location.coordinates": {$not: {$eq: coordinates}}
-                }).then(relatedObjs => {
-                    relatedObjects = [
-                        ...relatedObjects,
-                        ...relatedObjs
-                    ];
-
-
-                    if (index === ownObjects.length - 1) {
-                        res.status(200).send({
-                            message: "OK",
-                            relatedObjects
-                        });
+        const ownObjects = await TargetObject.find({_user: user._id});
+        relatedObjects = [...ownObjects];
+        ownObjects && ownObjects.forEach((object, index) => {
+            const {coordinates} = object.location;
+            TargetObject.find({
+                location: {
+                    $geoWithin: {
+                        $centerSphere: [
+                            coordinates,
+                            0.5 / 6378.1
+                        ]
                     }
-                }, err => {
-                    console.log(err)
-                })
-            })
-        }, err => {
-            console.log(err)
-        })
+                },
+                "location.coordinates": {$not: {$eq: coordinates}},
+            }).then(result => {
+                relatedObjects = [
+                    ...relatedObjects,
+                    ...result
+                ];
+
+                if (index === ownObjects.length - 1) {
+                    res.status(200).send({
+                        message: "OK",
+                        relatedObjects
+                    });
+                }
+
+            });
+        });
+
+        // relatedObjects[3].then(result => {console.log(result)});
+
+        // TargetObject.find({_user: user._id}).then(ownObjects => {
+        //     relatedObjects = [...ownObjects];
+        //     ownObjects.length && ownObjects.forEach((object, index) => {
+        //         const {coordinates} = object.location;
+        //         TargetObject.find({
+        //             location: {
+        //                 $geoWithin: {
+        //                     $centerSphere: [
+        //                         coordinates,
+        //                         0.5 / 6378.1
+        //                     ]
+        //                 }
+        //             },
+        //             "location.coordinates": {$not: {$eq: coordinates}}
+        //         }).then(relatedObjs => {
+        //             relatedObjects = [
+        //                 ...relatedObjects,
+        //                 ...relatedObjs
+        //             ];
+        //
+        //             console.log(relatedObjs.length);
+        //             if (index === ownObjects.length - 1) {
+        //                 res.status(200).send({
+        //                     message: "OK",
+        //                     relatedObjects
+        //                 });
+        //             }
+        //         }, err => {
+        //             console.log(err)
+        //         })
+        //
+        //     })
+        // }, err => {
+        //     console.log(err)
+        // })
     }
 };
 

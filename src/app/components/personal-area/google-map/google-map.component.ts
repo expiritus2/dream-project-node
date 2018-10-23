@@ -24,6 +24,29 @@ export class GoogleMapComponent implements OnInit, OnDestroy {
     public circleBoundsSubscription: Subscription;
     public targetObjectsSubscription: Subscription;
     public currentUser: User = null;
+    public redIcon = {
+        url: "http://localhost:3000/images/google-map-icons/red-icon.svg",
+        scaledSize: {
+            width: 60,
+            height: 90
+        }
+    };
+
+    public greenIcon = {
+        url: "http://localhost:3000/images/google-map-icons/green-icon.svg",
+        scaledSize: {
+            width: 60,
+            height: 50
+        }
+    };
+
+    public blueIcon = {
+        url: "http://localhost:3000/images/google-map-icons/blue-icon.svg",
+        scaledSize: {
+            width: 60,
+            height: 50
+        }
+    };
 
     constructor(private mapService: MapService,
                 private authService: AuthService,
