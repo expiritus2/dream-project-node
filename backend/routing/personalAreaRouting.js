@@ -1,3 +1,5 @@
+const express = require('express');
+const router = express.Router();
 const checkAuth = require('../middleware/check-auth');
 const multer = require('multer');
 
@@ -26,8 +28,8 @@ const storage = multer.diskStorage({
     }
 });
 
-module.exports = (app) => {
-    app.post('/personal-area/put-target', checkAuth, multer({storage}).array("images[]"), createTargetObject);
+router.post('/put-target', checkAuth, multer({storage}).array("images[]"), createTargetObject);
 
-    app.get('/personal-area/get-target-objects', checkAuth, getRelatedObjectsByUser);
-};
+router.get('/get-target-objects', checkAuth, getRelatedObjectsByUser);
+
+module.exports = router;

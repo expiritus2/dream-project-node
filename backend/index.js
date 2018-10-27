@@ -1,10 +1,13 @@
 const http = require('http');
-const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('./middleware/cors');
 const port = process.env.PORT || 3000;
+
+const passporRouter = require('./services/auth/passport');
+const authRouter = require('./routing/authRouting');
+const personalAreaRouter = require('./routing/personalAreaRouting');
 
 mongoose.set('useFindAndModify', false);
 
@@ -23,9 +26,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors);
 
-require('./services/auth/passport')(app);
-require('./routing/authRouting')(app);
-require('./routing/personalAreaRouting')(app);
+app.use(passporRouter);
+app.use('/auth', authRouter);
+app.use('/personal-area', personalAreaRouter);
 
 
 http.createServer(app).listen(port, () => {

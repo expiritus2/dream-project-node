@@ -1,21 +1,23 @@
+const express = require('express');
+const router = express.Router();
 const passport = require('passport');
 const checkAuth = require('../middleware/check-auth');
 
-module.exports = (app) => {
-    app.get('/auth/google', passport.authenticate('google', {
-        scope: ['profile', 'email']
-    }));
+router.get('/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+}));
 
-    app.get('/auth/google/callback', passport.authenticate('google'), (req, res, next) => {
-        res.redirect('/authorised');
-    });
+router.get('/google/callback', passport.authenticate('google'), (req, res, next) => {
+    res.redirect('/authorised');
+});
 
-    app.get('/auth/logout', (req, res, next) => {
-        req.logout();
-        res.redirect('/logout');
-    });
+router.get('/logout', (req, res, next) => {
+    req.logout();
+    res.redirect('/logout');
+});
 
-    app.get('/auth/current_user', checkAuth, (req, res, next) => {
-        res.send(req.user);
-    });
-};
+router.get('/current_user', checkAuth, (req, res, next) => {
+    res.send(req.user);
+});
+
+module.exports = router;
